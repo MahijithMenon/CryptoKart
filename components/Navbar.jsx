@@ -4,6 +4,7 @@ import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { NFTContext } from '../context/NFTContext';
 import images from '../assets';
 import Button from './Button';
 
@@ -36,8 +37,8 @@ const MenuItems = ({ isMobile, active, setActive }) => {
 };
 
 const ButtonGroup = ({ setActive, router }) => {
-  const hasConnected = true;
-  return hasConnected ? (
+  const { connectWallet, currentAccount } = useContext(NFTContext);
+  return currentAccount ? (
     <Button
       btnName="Create"
       classStyles="mx-2 rounded-xl"
@@ -46,7 +47,13 @@ const ButtonGroup = ({ setActive, router }) => {
         router.push('/create-nfts');
       }}
     />
-  ) : <Button btnName="Connect" classStyles="mx-2 rounded-xl" />;
+  ) : (
+    <Button
+      btnName="Connect"
+      classStyles="mx-2 rounded-xl"
+      handleClick={connectWallet}
+    />
+  );
 };
 
 const Navbar = () => {
@@ -63,7 +70,7 @@ const Navbar = () => {
             onClick={() => {}}
           >
             <Image src={images.logo02} objectFit="contain" width={32} height={32} alt="logo" />
-            <p className="dark:text-white text-nft-black-1 font-semibold text-lg">Crypto Kart</p>
+            <p className="dark:text-white text-nft-black-1 font-semibold text-lg">CryptoKart</p>
           </div>
         </Link>
         <Link href="/">
