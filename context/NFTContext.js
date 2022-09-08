@@ -30,21 +30,21 @@ export const NFTProvider = ({ children }) => {
     setCurrentAccount(accounts[0]);
     window.location.reload();
   };
-  // const uploadToIPFS = async (file) => {
-  //   try {
-  //     const metadata = await client.store({
-  //       name: 'Cryptokart Storage NFTs',
-  //       description: 'Test ERC-1155 compatible.',
-  //       image: file,
-  //     });
-  //     return metadata.data.image.href;
-  //   } catch (error) {
-  //     console.log('Error Uploading file to IPFS:');
-  //     console.log(error);
-  //   }
-  // };
+  const uploadToIPFS = async (file) => {
+    try {
+      const metadata = await client.store({
+        name: 'Cryptokart Storage NFTs',
+        description: 'Test ERC-1155 compatible.',
+        image: file,
+      });
+      return metadata.data.image.href;
+    } catch (error) {
+      console.log('Error Uploading file to IPFS:');
+      console.log(error);
+    }
+  };
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS }}>
       {children}
     </NFTContext.Provider>
   );
