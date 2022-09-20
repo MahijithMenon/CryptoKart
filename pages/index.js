@@ -64,7 +64,7 @@ const Home = () => {
             <div className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none" ref={scrollRef}>
               {[6, 7, 8, 9, 10].map((i) => (
                 <CreatorCard
-                  key="creator-$(i)"
+                  key={`creator-${i}`}
                   rank={i}
                   creatorImage={images[`creator${i}`]}
                   creatorName={`0x${makeId(3)}...${makeId(4)}`}
