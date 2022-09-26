@@ -5,8 +5,6 @@ import { ethers } from 'ethers';
 import axios from 'axios';
 import { MarketAddress, MarketAddressABI } from './constants';
 
-const Web3 = require('web3');
-
 const client = new NFTStorage({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdFYkE3ODVCOTFCMTYwNjFGNDA5MTEzNzc3OUY0MjFFY2RiNTk2MDciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MjY0NjcyMTU3MCwibmFtZSI6Ik5GVCBTdG9yYWdlIn0.vQRU-vilejQgQ-3YE0Ym5Zm_bKNuB86PbKxvKdRblH8' });
 
 const fetchContract = (signerOrProvider) => new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
@@ -34,6 +32,32 @@ export const NFTProvider = ({ children }) => {
     const provider = new ethers.providers.JsonRpcProvider();
     const contract = fetchContract(provider);
     const data = await contract.fetchMarketItems();
+    const items = await Promise.all(data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+      const tokenURI = await contract.tokenURI(tokenId);
+      const { data: { image, name, description } } = await axios.get(tokenURI);
+      const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether');
+      return {
+        price,
+        tokenId: tokenId.toNumber(),
+        seller,
+        owner,
+        image,
+        name,
+        description,
+        tokenURI,
+      };
+    }));
+    return items;
+  };
+
+  const fetchMyNFTsOrListedNFTs = async (type) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const contract = fetchContract(signer);
+    const data = type === 'fetchItemsListed' ? await contract.fetchitemsListed() : await contract.fetchMyNFTs();
     const items = await Promise.all(data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
       const tokenURI = await contract.tokenURI(tokenId);
       const { data: { image, name, description } } = await axios.get(tokenURI);
@@ -103,7 +127,7 @@ export const NFTProvider = ({ children }) => {
   };
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs }}>
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchMyNFTsOrListedNFTs }}>
       {children}
     </NFTContext.Provider>
   );
