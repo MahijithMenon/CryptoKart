@@ -30,7 +30,7 @@ export const NFTProvider = ({ children }) => {
   };
 
   const fetchNFTs = async () => {
-    const provider = new ethers.providers.JsonRpcProvider('https://rpc.slock.it/goerli');
+    const provider = new ethers.providers.JsonRpcProvider('https://rpc.ankr.com/eth_goerli');
     const contract = fetchContract(provider);
     const data = await contract.fetchMarketItems();
     const items = await Promise.all(data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {

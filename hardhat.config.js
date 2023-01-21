@@ -1,12 +1,13 @@
 const fs = require('fs');
 require('@nomiclabs/hardhat-waffle');
+require('dotenv').config();
 
 const privateKey = fs.readFileSync('.secret').toString().trim();
 
 module.exports = {
   networks: {
     goerli: {
-      url: 'https://eth-goerli.g.alchemy.com/v2/P9nzhL_XXp6cRqYyL18D0Gr5dsTxBZ4b',
+      url: `${process.env.MY_ALCHEMY_RPC_ENDPOINT}`,
       accounts: [`0x${privateKey}`],
     },
   },
