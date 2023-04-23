@@ -23,11 +23,11 @@ const Footer = () => {
             <Image src={images.logo02} objectFit="contain" width={32} height={32} alt="logo" />
             <p className="dark:text-white text-nft-black-1 font-semibold text-lg"> CryptoKart</p>
           </div>
-          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base mt-6">Wanna Report Any Bugs?</p>
-          {/* <div className="flexBetween md:w-full minlg:w-557 w-357 mt-6 dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 rounded-md" />
-          <input type="email" placeholder="Your Email" className="h-full flex-1 w-full dark:bg-nft-black-2 bg-white px-4 rounded-md dark:text-white text-nft-black-1 font-normal text-xs minlg:text-lg outline-none" /> */}
-          <div className="flex-initial p-3">
-            <Button btnName="Email Us" classStyles="rounded-md" />
+          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base mt-6">Get the latest updates.</p>
+          <div className="flexBetween md:w-full minlg:w-557 w-357 mt-6 dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 rounded-md" />
+          <input type="email" placeholder="Your Email" className="h-full flex-1 w-full dark:bg-nft-black-2 bg-white px-4 rounded-md dark:text-white text-nft-black-1 font-normal text-xs minlg:text-lg outline-none" />
+          <div className="flex-initial">
+            <Button btnName="Email me" classStyles="rounded-md" />
           </div>
         </div>
         <div className="flex-1 flexBetweenStart flex-wrap ml-10 md:ml-0 md:mt-8">
