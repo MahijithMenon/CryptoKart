@@ -5,9 +5,13 @@ import { ethers } from 'ethers';
 import axios from 'axios';
 import { MarketAddress, MarketAddressABI } from './constants';
 
-const client = new NFTStorage({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdFYkE3ODVCOTFCMTYwNjFGNDA5MTEzNzc3OUY0MjFFY2RiNTk2MDciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MjY0NjcyMTU3MCwibmFtZSI6Ik5GVCBTdG9yYWdlIn0.vQRU-vilejQgQ-3YE0Ym5Zm_bKNuB86PbKxvKdRblH8' });
+const client = new NFTStorage({
+  token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdFYkE3ODVCOTFCMTYwNjFGNDA5MTEzNzc3OUY0MjFFY2RiNTk2MDciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2MjY0NjcyMTU3MCwibmFtZSI6Ik5GVCBTdG9yYWdlIn0.vQRU-vilejQgQ-3YE0Ym5Zm_bKNuB86PbKxvKdRblH8',
+});
 
-const fetchContract = (signerOrProvider) => new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
+const fetchContract = (signerOrProvider) =>
+  new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
 export const NFTContext = React.createContext();
 export const NFTProvider = ({ children }) => {
@@ -25,29 +29,44 @@ export const NFTProvider = ({ children }) => {
     const listingPrice = await contract.getListingPrice();
 
     const transaction = !isReselling
-      ? await contract.createToken(url, price, { value: listingPrice.toString() }) : await contract.resellToken(id, price, { value: listingPrice.toString() });
+      ? await contract.createToken(url, price, {
+          value: listingPrice.toString(),
+        })
+      : await contract.resellToken(id, price, {
+          value: listingPrice.toString(),
+        });
     await transaction.wait();
   };
 
   const fetchNFTs = async () => {
-    const provider = new ethers.providers.JsonRpcProvider('https://rpc.ankr.com/eth_goerli');
+    const provider = new ethers.providers.AlchemyProvider(
+      'sepolia',
+      process.env.ALCHEMY_API_KEY
+    );
     const contract = fetchContract(provider);
     const data = await contract.fetchMarketItems();
-    const items = await Promise.all(data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
-      const tokenURI = await contract.tokenURI(tokenId);
-      const { data: { image, name, description } } = await axios.get(tokenURI);
-      const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether');
-      return {
-        price,
-        tokenId: tokenId.toNumber(),
-        seller,
-        owner,
-        image,
-        name,
-        description,
-        tokenURI,
-      };
-    }));
+    const items = await Promise.all(
+      data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+        const tokenURI = await contract.tokenURI(tokenId);
+        const {
+          data: { image, name, description },
+        } = await axios.get(tokenURI);
+        const price = ethers.utils.formatUnits(
+          unformattedPrice.toString(),
+          'ether'
+        );
+        return {
+          price,
+          tokenId: tokenId.toNumber(),
+          seller,
+          owner,
+          image,
+          name,
+          description,
+          tokenURI,
+        };
+      })
+    );
     return items;
   };
 
@@ -58,22 +77,32 @@ export const NFTProvider = ({ children }) => {
     const signer = provider.getSigner();
 
     const contract = fetchContract(signer);
-    const data = type === 'fetchItemsListed' ? await contract.fetchitemsListed() : await contract.fetchMyNFTs();
-    const items = await Promise.all(data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
-      const tokenURI = await contract.tokenURI(tokenId);
-      const { data: { image, name, description } } = await axios.get(tokenURI);
-      const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether');
-      return {
-        price,
-        tokenId: tokenId.toNumber(),
-        seller,
-        owner,
-        image,
-        name,
-        description,
-        tokenURI,
-      };
-    }));
+    const data =
+      type === 'fetchItemsListed'
+        ? await contract.fetchitemsListed()
+        : await contract.fetchMyNFTs();
+    const items = await Promise.all(
+      data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+        const tokenURI = await contract.tokenURI(tokenId);
+        const {
+          data: { image, name, description },
+        } = await axios.get(tokenURI);
+        const price = ethers.utils.formatUnits(
+          unformattedPrice.toString(),
+          'ether'
+        );
+        return {
+          price,
+          tokenId: tokenId.toNumber(),
+          seller,
+          owner,
+          image,
+          name,
+          description,
+          tokenURI,
+        };
+      })
+    );
     return items;
   };
 
@@ -92,7 +121,9 @@ export const NFTProvider = ({ children }) => {
 
   const connectWallet = async () => {
     if (!window.ethereum) return alert('Please install MetaMask');
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    });
     setCurrentAccount(accounts[0]);
     window.location.reload();
   };
@@ -135,12 +166,26 @@ export const NFTProvider = ({ children }) => {
 
     const contract = fetchContract(signer);
     const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
-    const transaction = await contract.createMarketSale(nft.tokenId, { value: price });
+    const transaction = await contract.createMarketSale(nft.tokenId, {
+      value: price,
+    });
     await transaction.wait();
   };
 
   return (
-    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, createNFT, fetchNFTs, fetchMyNFTsOrListedNFTs, buyNFT, createSale }}>
+    <NFTContext.Provider
+      value={{
+        nftCurrency,
+        connectWallet,
+        currentAccount,
+        uploadToIPFS,
+        createNFT,
+        fetchNFTs,
+        fetchMyNFTsOrListedNFTs,
+        buyNFT,
+        createSale,
+      }}
+    >
       {children}
     </NFTContext.Provider>
   );

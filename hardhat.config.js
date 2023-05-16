@@ -6,8 +6,9 @@ const privateKey = fs.readFileSync('.secret').toString().trim();
 
 module.exports = {
   networks: {
-    goerli: {
-      url: `${process.env.MY_ALCHEMY_RPC_ENDPOINT}`,
+    hardhat: {},
+    sepolia: {
+      url: `${process.env.ALCHEMY_URL}`,
       accounts: [`0x${privateKey}`],
     },
   },
