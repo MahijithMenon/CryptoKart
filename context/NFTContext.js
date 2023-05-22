@@ -39,9 +39,8 @@ export const NFTProvider = ({ children }) => {
   };
 
   const fetchNFTs = async () => {
-    const provider = new ethers.providers.AlchemyProvider(
-      'sepolia',
-      process.env.ALCHEMY_API_KEY
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.ALCHEMY_URL
     );
     const contract = fetchContract(provider);
     const data = await contract.fetchMarketItems();
