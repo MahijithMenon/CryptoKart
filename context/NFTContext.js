@@ -16,7 +16,7 @@ const fetchContract = (signerOrProvider) =>
 export const NFTContext = React.createContext();
 export const NFTProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState('');
-  const nftCurrency = 'ETH';
+  const nftCurrency = 'MATIC';
 
   const createSale = async (url, formInputPrice, isReselling, id) => {
     const web3Modal = new Web3Modal();
@@ -40,11 +40,8 @@ export const NFTProvider = ({ children }) => {
 
   const fetchNFTs = async () => {
     const provider = new ethers.providers.JsonRpcProvider(
-      process.env.ALCHEMY_URL
+      process.env.NEXT_PUBLIC_ALCHEMY_API_URL
     );
-    // const provider = new ethers.providers.JsonRpcProvider(
-    //   process.env.ALCHEMY_URL
-    // );
     const contract = fetchContract(provider);
     const data = await contract.fetchMarketItems();
     const items = await Promise.all(

@@ -5,10 +5,11 @@ require('dotenv').config();
 const privateKey = fs.readFileSync('.secret').toString().trim();
 
 module.exports = {
+  defaultNetwork: 'matic',
   networks: {
     hardhat: {},
-    sepolia: {
-      url: `${process.env.ALCHEMY_URL}`,
+    matic: {
+      url: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
       accounts: [`0x${privateKey}`],
     },
   },
