@@ -42,6 +42,9 @@ export const NFTProvider = ({ children }) => {
     const provider = new ethers.providers.JsonRpcProvider(
       process.env.ALCHEMY_URL
     );
+    // const provider = new ethers.providers.JsonRpcProvider(
+    //   process.env.ALCHEMY_URL
+    // );
     const contract = fetchContract(provider);
     const data = await contract.fetchMarketItems();
     const items = await Promise.all(
