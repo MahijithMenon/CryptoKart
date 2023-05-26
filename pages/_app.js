@@ -14,9 +14,11 @@ const MyApp = ({ Component, pageProps }) => (
         </div>
         <Footer />
       </div>
-      <Script src="https://kit.fontawesome.com/b96448145d.js" crossOrigin="anonymous" />
+      <Script
+        src="https://kit.fontawesome.com/b96448145d.js"
+        crossOrigin="anonymous"
+      />
     </ThemeProvider>
   </NFTProvider>
-
 );
 export default MyApp;

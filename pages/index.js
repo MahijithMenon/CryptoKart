@@ -7,6 +7,7 @@ import { Banner, CreatorCard, Loader, NFTCard, SearchBar } from '../components';
 import images from '../assets';
 import { shortenAddress } from '../utils/shortenAddress';
 
+/* eslint-disable */
 const Home = () => {
   const { fetchNFTs } = useContext(NFTContext);
   const [hideButtons, setHideButtons] = useState(false);
