@@ -28,6 +28,9 @@
     "web3.storage": "^4.4.0",
     "web3modal": "1.9.5"
   },
+  "engines": {
+    "node": "18.x.x"
+  },
   "devDependencies": {
     "autoprefixer": "10.4.2",
     "eslint": "^8.22.0",
